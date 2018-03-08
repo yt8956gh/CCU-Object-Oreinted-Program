@@ -1,2 +1,2 @@
 # OOP
-Object-oreinted Program Course
+Object-oriented Program Course
