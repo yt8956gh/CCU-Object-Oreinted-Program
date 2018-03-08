@@ -4,7 +4,6 @@
 
 using namespace std;
 
-
 int main(int argc, char** argv) {
     
     string tmp;
@@ -42,7 +41,6 @@ int main(int argc, char** argv) {
             i++; j--;
         }
         
-
         if(isPal==1)    cout<<"Yes\n"<<endl;
         else    cout<<"No\n"<<endl;
         
