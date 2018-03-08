@@ -12,6 +12,8 @@ public class hw1
         //scanner a line for System standard input
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Hint: Key Enter Directly to Exit!\n");
+        System.out.println("Please enter potential palindrome:");
 
         //get a string including space and tab
         tmp = scanner.nextLine();
@@ -25,10 +27,12 @@ public class hw1
             while(i<len || j>=0)
             {
                 //If characters pointed are not alphabet, the pointers of comparison will move 
-                while(!Character.isLetter(tmp.charAt(i))) i++;
-                while(!Character.isLetter(tmp.charAt(j))) j--;
+                while(i<len && !Character.isLetter(tmp.charAt(i))) i++;
+                while(j>=0 && !Character.isLetter(tmp.charAt(j))) j--;
 
-                if(tmp.charAt(i)!=tmp.charAt(j))
+                if(i>=len || j<0) break;
+
+                if(Character.toUpperCase(tmp.charAt(i))!=Character.toUpperCase(tmp.charAt(j)))
                 {
                     isPal = 0;
                     break;
@@ -38,9 +42,10 @@ public class hw1
                 i++; j--;
             }
 
-            if(isPal == 1) System.out.println("Valid");
-            else System.out.println("Invalid");
+            if(isPal == 1) System.out.println("Yes\n");
+            else System.out.println("No\n");
 
+            System.out.println("Please enter potential palindrome:");
             tmp = scanner.nextLine();//read new line for next loop step
             len = tmp.length();
         }
