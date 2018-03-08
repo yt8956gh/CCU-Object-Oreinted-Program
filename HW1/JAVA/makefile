@@ -1,5 +1,5 @@
 all:
 	javac hw1.java
 clean:
-	rm hw1
+	rm hw1.class
 	
