@@ -2,32 +2,20 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
-struct Word
-{
-    int count;
-    int where;
-    string word;
-    struct Word *next;
-};
-
-typedef struct Word WORD;
-
 int main(void)
 {
-    int i=0;
+    int i=0,c=0;
 
-    string tmp, filename, tok[3];
+    string tmp, filename, tok[3], word;
     stringstream ss;
+    vector<string> list;
+    vector<string>::iterator k;
 
-    WORD *list[1000];
-    size_t string_ptr=0;
-
-    for(i=0;i<1000;i++) list[i]=NULL;
-
-    fstream file;
+    ifstream file;
 
     while(1)
     {
@@ -41,10 +29,6 @@ int main(void)
         }
         else if(tmp=="new")
         {
-            for(i=0;i<1000;i++)
-            {
-                list[i]=NULL;
-            }
             continue;
         }
         else if(tmp.substr(0,7)=="locate ")//substr(position of substring ,length of substring)
@@ -54,18 +38,59 @@ int main(void)
             ss>>tok[0]>>tok[1]>>tok[2];
 
             if(tok[0]=="" || tok[1]=="" || tok[2]!="") 
+            {
                 cout<<"ERROR: Invalid command !"<<endl;
+                continue;
+            }
+
 
         }
         else if(tmp.substr(0,5)=="load ")
         {
             tmp = tmp.substr(5);
-
             ss<<tmp;
             ss>>tok[0]>>tok[1];
 
             if(tok[0]=="" || tok[1]!="")
+            {
                 cout<<"ERROR: Invalid command !"<<endl;
+                continue;
+            }
+
+            filename = tok[0];
+
+            file.open(filename.c_str(), ios::in);
+
+            if(!file)
+            {
+                cout<<"Fail to open file!"<<endl;
+                continue;
+            }
+
+            while(getline(file, tmp))
+            {
+                for(string::iterator k=tmp.begin(); k<tmp.end(); k++)
+                {
+                    c=*k;
+                    if(c<'A'||(c>'Z'&&c<'a')||c>'z') *k=' ';
+                }
+
+                cout<<tmp<<endl;
+
+                ss.clear();
+                ss<<tmp;
+
+                while(ss>>word)
+                {
+                    list.push_back(word);
+                }
+            }
+
+            for(i=0;i<list.size(); i++)
+            {
+                cout<<list.at(i)<<endl;
+            }
+
         }
         else
         {
