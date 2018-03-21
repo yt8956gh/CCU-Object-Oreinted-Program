@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <sstream>
+#include <sstream> //stringstream
 #include <vector>
-#include <stdexcept>
+#include <stdexcept> //處裡例外
 
 using namespace std;
 
@@ -21,7 +21,7 @@ int main(void)
 
     while(1)
     {
-
+        // initialize
         for(i=0;i<3;i++) tok[i].clear();
         ss.clear();
         cout.flush();
@@ -44,7 +44,7 @@ int main(void)
             found.clear();
             tmp = tmp.substr(7);
             ss<<tmp;
-            ss>>tok[0]>>tok[1]>>tok[2];
+            ss>>tok[0]>>tok[1]>>tok[2];// Syntax : locate [word] [N: N-st words]
 
             if(tok[0]=="" || tok[1]=="" || tok[2]!="") 
             {
@@ -55,27 +55,27 @@ int main(void)
             ss.clear();
 
             ss<<tok[1];
-
-            if(!(ss>>count)||count<=0)// check which all of character in string are number. 
+            // check whether all of character in string are number. 
+            if(!(ss>>count)||count<=0)//當ss的buffer內沒有字元或輸出不合法時回傳failbit
             {
                 cout<<"ERROR: Invalid command !"<<endl;
                 continue;
             }
 
-            for(i=0;i<list.size(); i++)
+            for(i=0;i<list.size(); i++)//將出現該word的位置push進vecter<int> found
             {
                 if(list.at(i)==tok[0])
                 {
-                    found.push_back(i+1);
+                    found.push_back(i+1);//word從1開始計算
                 }
             }
 
-            try
+            try//當count(locate的第三個變數)大於found的max-index時，拋出out_of_range
             {
                 if(found.at(count-1))
                     cout<<found.at(count-1)<<endl;
             }
-            catch(const std::out_of_range& e)
+            catch(const std::out_of_range& e)//catch上述例外
             {
                 cout<<"No matching entry"<<endl;
             }
@@ -95,7 +95,7 @@ int main(void)
 
             filename = tok[0];
 
-            file.open(filename.c_str(), ios::in);
+            file.open(filename.c_str(), ios::in);//string::open只吃char[]型態的字串
 
             if(!file)
             {
@@ -105,6 +105,7 @@ int main(void)
 
             while(getline(file, tmp))
             {
+                //iterating every word in a line for checking the chars exclusing alphabets and apostrophe 
                 for(string::iterator ptr=tmp.begin(); ptr<tmp.end(); ptr++)
                 {
                     c=*ptr;
@@ -116,7 +117,7 @@ int main(void)
                 ss.clear();
                 ss<<tmp;
 
-                while(ss>>word)
+                while(ss>>word)//當ss的buffer內沒有字元或輸出不合法時回傳failbit
                 {
                     list.push_back(word);
                 }
