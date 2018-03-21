@@ -8,19 +8,24 @@ using namespace std;
 
 int main(void)
 {
-    int i=0,c=0;
+    int i=0,c=0,count=0;
 
     string tmp, filename, tok[3], word;
     stringstream ss;
     vector<string> list;
-    vector<string>::iterator k;
+    vector<string>::iterator ptr;
+    vector<int> found;
 
     ifstream file;
 
     while(1)
     {
-        cout<<">";
 
+        for(i=0;i<3;i++) tok[i].clear();
+        ss.clear();
+        cout.flush();
+
+        cout<<">";
         getline(cin, tmp);
 
         if(tmp=="end")
@@ -29,10 +34,13 @@ int main(void)
         }
         else if(tmp=="new")
         {
+            list.clear();
+            file.close();
             continue;
         }
         else if(tmp.substr(0,7)=="locate ")//substr(position of substring ,length of substring)
         {
+            found.clear();
             tmp = tmp.substr(7);
             ss<<tmp;
             ss>>tok[0]>>tok[1]>>tok[2];
@@ -43,6 +51,33 @@ int main(void)
                 continue;
             }
 
+            ss.clear();
+
+            ss<<tok[1];
+
+            if(!(ss>>count)||count<=0)// check which all of character in string are number. 
+            {
+                cout<<"ERROR: Invalid command !"<<endl;
+                continue;
+            }
+
+            for(i=0;i<list.size(); i++)
+            {
+                if(list.at(i)==tok[0])
+                {
+                    found.push_back(i+1);
+                }
+            }
+
+            try
+            {
+                if(found.at(count-1))
+                    cout<<found.at(count-1)<<endl;
+            }
+            catch(const std::out_of_range& e)
+            {
+                cout<<"No matching entry"<<endl;
+            }
 
         }
         else if(tmp.substr(0,5)=="load ")
@@ -69,14 +104,14 @@ int main(void)
 
             while(getline(file, tmp))
             {
-                for(string::iterator k=tmp.begin(); k<tmp.end(); k++)
+                for(string::iterator ptr=tmp.begin(); ptr<tmp.end(); ptr++)
                 {
-                    c=*k;
-                    if(c<'A'||(c>'Z'&&c<'a')||c>'z') *k=' ';
+                    c=*ptr;
+                    if(c=='\'') *ptr='\'';
+                    else if(!isalpha(c)) *ptr=' ';
                 }
 
-                cout<<tmp<<endl;
-
+                //cout<<tmp<<endl;
                 ss.clear();
                 ss<<tmp;
 
@@ -85,24 +120,12 @@ int main(void)
                     list.push_back(word);
                 }
             }
-
-            for(i=0;i<list.size(); i++)
-            {
-                cout<<list.at(i)<<endl;
-            }
-
         }
         else
         {
             cout<<"ERROR: Invalid command !"<<endl;
         }
-
-        for(i=0;i<3;i++) tok[i].clear();
-        ss.clear();
-        cout.flush();
-
     }
-
 
     return 0;
 }
