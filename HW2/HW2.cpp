@@ -55,7 +55,7 @@ int main(void)
 
             ss<<tok[1];
 
-            if(!(ss>>count)||count<=0)// check which all of character in string are number. 
+            if(!(ss>>count)||count<=0)// check whether all of character in string are number. 
             {
                 cout<<"ERROR: Invalid command !"<<endl;
                 continue;
