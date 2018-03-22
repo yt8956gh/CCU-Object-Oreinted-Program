@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream> //stringstream
 #include <vector>
-#include <stdexcept> //處裡例外
+#include <stdexcept> //處理例外
 
 using namespace std;
 
