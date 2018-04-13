@@ -1,6 +1,11 @@
+#ifndef USER_H 
+#define USER_H
+
+
+
 #include <string>
 #include <iostream>
-#include "Account.h"
+#include "Account.h"//there is "Account.h" inside
 
 class User 
 {
@@ -12,7 +17,7 @@ private:
     int ID;
     std::string name;
     Account account;
-    //Transaction *trans[100];
+    Transaction *trans;
 
 public:
 
@@ -24,7 +29,8 @@ public:
 
     int getID();
 
-    //std::string &getTrans();
+    std::string &getTrans();
 };
 
 
+#endif
