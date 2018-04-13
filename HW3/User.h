@@ -1,23 +1,24 @@
 #ifndef USER_H 
 #define USER_H
 
-
-
 #include <string>
 #include <iostream>
-#include "Account.h"//there is "Account.h" inside
+#include "Account.h"
 
 class User 
 {
 
+friend class Account;
+
 private:
 
     static int ID_counter;
-    static int trans_call_counter;
+    int trans_call_counter;
     int ID;
     std::string name;
+    std::vector<Transaction> trans;
     Account account;
-    Transaction *trans;
+
 
 public:
 
@@ -29,7 +30,8 @@ public:
 
     int getID();
 
-    std::string &getTrans();
+    bool getTrans();
+
 };
 
 

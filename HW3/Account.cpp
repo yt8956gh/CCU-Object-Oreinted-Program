@@ -1,20 +1,20 @@
 #include <iostream>
 #include <string>
-#include "Account.h"
+#include <vector>
+#include "User.h"
+#include "Account.h" 
 #include "Transaction.h"
 
 using namespace std;
 
-int Account::call_counter=0;
-
-Account::Account(int amount_init, const int ID_init, const char *owner_init)
+Account::Account(int amount_init, const int ID_init, const char *owner_init, User* user)
 {
     std::cout<<"Account\t(ID:"<<ID_init<<")\tconstructed"<<std::endl;
     this->amount=amount_init;
     this->ID=ID_init;
     this->owner.assign(owner_init);
-
-    for(int i;i<100;i++) trans[i]=NULL;
+    this->user=user;
+    this->trans_counter=0;
 }
 
 bool Account::withdraw(int deductAmount)
@@ -23,7 +23,8 @@ bool Account::withdraw(int deductAmount)
 
     amount-=deductAmount;
 
-    trans[call_counter++] = new Transaction(this,"Withdraw", deductAmount);
+    (user->trans).push_back(Transaction(this,"Withdraw", deductAmount));
+    trans_counter++;
 
     return true;
 }
@@ -32,12 +33,19 @@ bool Account::withdraw(int deductAmount)
 bool Account::deposit(int addAmount)
 {
     amount+=addAmount;
+
+    user->trans.push_back(Transaction(this,"Deposit", addAmount));
+    trans_counter++;
+
     return true;
 }
 
 bool Account::transferMoney(Account & AccountOfB, int amountToTransfer)
 {
     if(amountToTransfer>amount) return false;
+
+    user->trans.push_back(Transaction(&AccountOfB,"Transferred", amountToTransfer));
+    trans_counter++;
 
     AccountOfB.deposit(amountToTransfer);
     amount-=amountToTransfer;

@@ -3,19 +3,25 @@
 
 #include "Transaction.h"
 #include <string>
+#include <vector>
+
+class User;
 
 class Account
 {
+
     private:
-        static int call_counter;
+        int trans_counter;
         int ID;
         int amount;
+        User* user;
         std::string owner;
-        Transaction *trans[100];
+        
 
     public:
         //Member initialization list
-        Account(int,const int, const char *);
+
+        Account(int,const int, const char *, User*);
 
         bool withdraw(int);
 
@@ -26,6 +32,8 @@ class Account
         int getAmount();
 
         std::string &getOwnerName();
+
+
 };
 
 #endif

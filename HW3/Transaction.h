@@ -4,7 +4,7 @@
 #include<iostream>
 #include<string>
 
-class Account;
+class Account;//for include with Account.h each other
 
 class Transaction
 {
