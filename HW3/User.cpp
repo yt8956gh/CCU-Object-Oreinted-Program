@@ -21,6 +21,10 @@ User::User(const char *name):account(0,ID_counter,name,this)
 User::~User()
 {
     cout<<"User\t(ID:"<<ID<<")\tdestructed"<<endl;
+    for(int i=0;i<trans.size();i++)
+    {
+        delete trans.at(i);
+    }
 }
 
 
