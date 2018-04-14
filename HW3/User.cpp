@@ -1,4 +1,5 @@
 #include "User.h"
+#include "Transaction.h"
 
 using namespace std;
 
@@ -11,10 +12,15 @@ int User::ID_counter=0;//static variable initialization should be in .cpp
 
 User::User(const char *name):account(0,ID_counter,name,this)
 {
-    std::cout<<"User\t(ID:"<<ID_counter<<")\tconstructed"<<endl<<endl;
+    cout<<"User\t(ID:"<<ID_counter<<")\tconstructed"<<endl<<endl;
     this->name.assign(name);
     this->ID=ID_counter++;
     this->trans_call_counter=0;
+}
+
+User::~User()
+{
+    cout<<"User\t(ID:"<<ID<<")\tdestructed"<<endl;
 }
 
 

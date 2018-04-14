@@ -23,6 +23,7 @@ private:
 public:
 
     User(const char *name);
+    ~User();
     
     const char *getUsername();
 

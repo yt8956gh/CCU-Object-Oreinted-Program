@@ -16,6 +16,8 @@ private:
 public:
     Transaction(Account *,const char *,int);
 
+    ~Transaction();
+
     void print();
 };
 

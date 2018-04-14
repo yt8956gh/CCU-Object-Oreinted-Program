@@ -23,6 +23,8 @@ class Account
 
         Account(int,const int, const char *, User*);
 
+        ~Account();
+
         bool withdraw(int);
 
         bool deposit(int);
