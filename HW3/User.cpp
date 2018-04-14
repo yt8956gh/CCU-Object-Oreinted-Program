@@ -44,7 +44,7 @@ bool User::getTrans()
     // size return number of item ,so operator is "<"
     if(trans_call_counter<trans.size())
     {
-         trans.at(trans_call_counter).print();
+         trans.at(trans_call_counter)->print();
          trans_call_counter++;
          return true;
     }

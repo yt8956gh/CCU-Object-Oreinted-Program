@@ -23,17 +23,23 @@ int main(void)
 
 
     if(a.withdraw(1100))
-        cout<<"Successfully"<<endl;
+        cout<<"Withdraw successfully"<<endl;
     else
         cout<<"Fail to withdraw"<<endl;
 
 
     a.deposit(500);
     b.deposit(1000);
-    b.withdraw(1);
+    
+
+    if(b.withdraw(1))
+        cout<<"Withdraw successfully"<<endl;
+    else
+        cout<<"Fail to withdraw"<<endl;
+
     
     if(a.transferMoney(b,500))
-        cout<<"Successfully"<<endl;
+        cout<<"TransferMoney successfully"<<endl;
     else
         cout<<"Fail to transferMoney"<<endl;
 

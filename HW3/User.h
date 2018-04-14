@@ -16,7 +16,7 @@ private:
     int trans_call_counter;
     int ID;
     std::string name;
-    std::vector<Transaction> trans;
+    std::vector<Transaction*> trans;
     Account account;
 
 

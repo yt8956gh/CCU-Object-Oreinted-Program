@@ -14,7 +14,7 @@ Account::Account(int amount_init, const int ID_init, const char *owner_init, Use
     this->owner.assign(owner_init);
     this->user=user;
     this->trans_counter=0;
-    user->trans.push_back(Transaction(this,"Create", 0));
+    user->trans.push_back(new Transaction(this,"Create", 0));
 }
 
 
@@ -29,7 +29,7 @@ bool Account::withdraw(int deductAmount)
 
     amount-=deductAmount;
 
-    user->trans.push_back(Transaction(this,"Withdraw", deductAmount));
+    user->trans.push_back(new Transaction(this,"Withdraw", deductAmount));
     trans_counter++;
 
     return true;
@@ -40,7 +40,7 @@ bool Account::deposit(int addAmount)
 {
     amount+=addAmount;
 
-    user->trans.push_back(Transaction(this,"Deposit", addAmount));
+    user->trans.push_back(new Transaction(this,"Deposit", addAmount));
     trans_counter++;
 
     return true;
@@ -50,7 +50,7 @@ bool Account::transferMoney(Account & AccountOfB, int amountToTransfer)
 {
     if(amountToTransfer>amount) return false;
 
-    user->trans.push_back(Transaction(&AccountOfB,"Transfer", amountToTransfer));
+    user->trans.push_back(new Transaction(&AccountOfB,"Transfer", amountToTransfer));
     trans_counter++;
 
     AccountOfB.deposit(amountToTransfer);
