@@ -32,7 +32,6 @@ private:
 public:
     Bag()
     {
-
         // initialization for hand node ptr
         this->first= new struct node<ItemType>;
         first->contain = NULL;
@@ -49,20 +48,84 @@ public:
         cout<<"Bag constructed\n";
     }
 
+
+
+    Bag(const Bag<ItemType>& copy)
+    {
+        this->first= new struct node<ItemType>;
+        first->contain = NULL;
+        first->left = first;
+        first->right = first;
+
+        this->finger = NULL;//avoid trace node before initializing iterator
+        item_num=iterator_num=0;
+
+        empty_obj = new ItemType;
+        memset(empty_obj ,'\0',sizeof(empty_obj));
+
+
+        struct node<ItemType>* ptr=NULL;
+        ptr = (copy.first)->right;
+
+        while(ptr!=copy.first)
+        {
+            insert(*(ptr->contain));
+            ptr=ptr->right;
+        }
+
+        cout<<"Bag copy constructed\n";
+    }
+
+
+
+
+
     ~Bag()
     {
+
+        int item_found=0;
+        struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
+
+        finger=NULL;
+        iterator_num=0;
+
+        ptr=first->right;
+
+        while(ptr!=first)
+        {
+            del=ptr;
+
+            //將del(被刪除的node)的兩邊重新接上
+            LEFT = del->left;
+            RIGHT = del->right;
+
+            LEFT->right = RIGHT;
+            RIGHT->left = LEFT;
+
+            delete del->contain;//delete ItemType object
+            del->contain=NULL;
+
+            delete del;//delete node contain
+            del=NULL;
+
+            ptr=ptr->right;
+        }
+        
+
+        delete first;
+        delete empty_obj;
+
         cout<<"Bag destructed\n";
     }
 
 
+
     bool empty() const
     {
-        if(item_num==0) return true;
+        if(first == (first->right)) return true;
         else return false;
     }
     //如果背包是空的就回傳true，否則回傳false
-
-
 
 
     int size() const
@@ -70,7 +133,6 @@ public:
         return item_num;
     }
     //回傳背包中物品總數
-
 
 
     int uniqueSize() const
@@ -107,10 +169,11 @@ public:
 
         }
 
+
+        checked.clear();
+        //checked.shrink_to_fit();// free vector
+
         return variety;
-
-
-
     }
     //回傳背包中相異物品數
 
@@ -157,7 +220,6 @@ public:
             return 0;
         }
 
-
         while(ptr!=first)
         {
             del=ptr;
@@ -181,6 +243,7 @@ public:
                 delete del;//delete node contain
                 del=NULL;
 
+                --item_num;
                 break;
             }
 
@@ -191,9 +254,6 @@ public:
         else return item_counter;
     }
     //移除背包中一個物品value，回傳移除的是第幾個物品，若背包中沒這樣物品則回傳0
-
-
-
 
     int eraseAll(const ItemType& value)
     {
@@ -239,7 +299,6 @@ public:
 
             ptr=ptr->right;
         }
-
 
         //cerr<<"ITEM_FOUND:"<<item_found<<endl;
         this->item_num = item_num - item_found;
@@ -380,7 +439,5 @@ public:
     }
     //回傳手指指到的是第幾個物品
     //若更動過背包中的物品(insert, erase, eraseAll)，必須先初始化才能使用呼叫currentCount()
-    //若還未將手指初始化就呼叫currentCount，印Please initializes，回傳0，並且程式不能壞掉
-
-
+    //若還未將手指初始化就呼叫currentCount，印Please initializes，回傳0，並且程式不能壞掉f
 };

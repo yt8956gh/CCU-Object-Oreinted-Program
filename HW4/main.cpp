@@ -67,6 +67,7 @@ int main()
 
 
     a.start();
+    b.start();
 
     cout<<"test int:"<<a.currentValue()<<endl;
 
@@ -78,6 +79,14 @@ int main()
 
 
     cout<<"test string:"<<b.currentValue()<<endl;
+
+
+
+    Bag<string> c = b;
+
+    cout<<"b size:"<<b.size()<<endl;
+
+    cout<<"c size:"<<c.size()<<endl;
 
 
     //cout<<a.empty()<<endl;
