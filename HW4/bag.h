@@ -29,6 +29,38 @@ private:
     ItemType *empty_obj;
 
 
+    void  deleteAll(void)
+    {
+        int item_found=0;
+        struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
+
+        finger=NULL;
+        iterator_num=0;
+
+        ptr=first->right;
+
+        while(ptr!=first)
+        {
+            del=ptr;
+
+            //將del(被刪除的node)的兩邊重新接上
+            LEFT = del->left;
+            RIGHT = del->right;
+
+            LEFT->right = RIGHT;
+            RIGHT->left = LEFT;
+
+            delete del->contain;//delete ItemType object
+            del->contain=NULL;
+
+            delete del;//delete node contain
+            del=NULL;
+
+            ptr=ptr->right;
+        }
+    }
+
+
 public:
     Bag()
     {
@@ -83,39 +115,37 @@ public:
     ~Bag()
     {
 
-        int item_found=0;
-        struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
-
-        finger=NULL;
-        iterator_num=0;
-
-        ptr=first->right;
-
-        while(ptr!=first)
-        {
-            del=ptr;
-
-            //將del(被刪除的node)的兩邊重新接上
-            LEFT = del->left;
-            RIGHT = del->right;
-
-            LEFT->right = RIGHT;
-            RIGHT->left = LEFT;
-
-            delete del->contain;//delete ItemType object
-            del->contain=NULL;
-
-            delete del;//delete node contain
-            del=NULL;
-
-            ptr=ptr->right;
-        }
-        
+        deleteAll();
 
         delete first;
         delete empty_obj;
 
         cout<<"Bag destructed\n";
+    }
+
+
+    Bag<ItemType>& operator=(const Bag<ItemType>& a)
+    {
+        struct node<ItemType> *ptr=NULL;
+
+        ptr=first;
+
+        if((ptr->right)==ptr)//左邊是非空
+        {
+           deleteAll();
+        } 
+
+
+        ptr = (a.first)->right;
+        
+
+        while(ptr!=(a.first))
+        {
+            insert(*(ptr->contain));
+            ptr = ptr->right;
+        }
+
+        return *this;
     }
 
 
