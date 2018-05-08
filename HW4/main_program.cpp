@@ -72,5 +72,13 @@ int main(){
 										//c_result中要有1個"duck", 0個"goose", 0個"chicken"
 
 
+	//delete &a;
+	//delete &a_copy;
+	//delete &a_assignment;
+	//delete &b;
+	//delete &c1;
+	//delete &c2;
+
+
 	return 0;							//毀掉幾個就印幾次Bag destructor//印七次Bag constructor
 }

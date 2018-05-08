@@ -35,7 +35,7 @@ private:
         struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
 
         finger=NULL;
-        iterator_num=0;
+        iterator_num=item_num=0;
 
         ptr=first->right;
 
@@ -105,6 +105,8 @@ public:
             ptr=ptr->right;
         }
 
+
+
         cout<<"Bag copy constructed\n";
     }
 
@@ -130,7 +132,7 @@ public:
 
         ptr=first;
 
-        if((ptr->right)==ptr)//左邊是非空
+        if((ptr->right)!=ptr)//左邊是非空
         {
            deleteAll();
         } 
