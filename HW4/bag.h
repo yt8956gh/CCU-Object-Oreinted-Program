@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-template<class ItemType> 
+template<class ItemType>
 struct node
 {
     ItemType* contain;
@@ -19,46 +19,20 @@ struct node
 
 
 
+
+
+
 template<class ItemType>
 class Bag
-{      
+{
+
+//friend void combine();
+
 
 private:
     struct node<ItemType>*first,*finger;
     int item_num,iterator_num;
     ItemType *empty_obj;
-
-
-    void  deleteAll(void)
-    {
-        int item_found=0;
-        struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
-
-        finger=NULL;
-        iterator_num=item_num=0;
-
-        ptr=first->right;
-
-        while(ptr!=first)
-        {
-            del=ptr;
-
-            //將del(被刪除的node)的兩邊重新接上
-            LEFT = del->left;
-            RIGHT = del->right;
-
-            LEFT->right = RIGHT;
-            RIGHT->left = LEFT;
-
-            delete del->contain;//delete ItemType object
-            del->contain=NULL;
-
-            delete del;//delete node contain
-            del=NULL;
-
-            ptr=ptr->right;
-        }
-    }
 
 
 public:
@@ -104,9 +78,6 @@ public:
             insert(*(ptr->contain));
             ptr=ptr->right;
         }
-
-
-
         cout<<"Bag copy constructed\n";
     }
 
@@ -120,7 +91,7 @@ public:
         deleteAll();
 
         delete first;
-        delete empty_obj;
+        //delete empty_obj;
 
         cout<<"Bag destructed\n";
     }
@@ -135,11 +106,11 @@ public:
         if((ptr->right)!=ptr)//左邊是非空
         {
            deleteAll();
-        } 
+        }
 
 
         ptr = (a.first)->right;
-        
+
 
         while(ptr!=(a.first))
         {
@@ -148,6 +119,43 @@ public:
         }
 
         return *this;
+    }
+
+
+    void  deleteAll(void)
+    {
+        int item_found=0;
+        struct node<ItemType> *ptr=NULL,*del=NULL,*LEFT=NULL,*RIGHT=NULL;
+
+        finger=NULL;
+        iterator_num=item_num=0;
+
+        ptr=first->right;
+
+        while(ptr!=first)
+        {
+
+            //cerr<<"enter while"<<endl;
+            del=ptr;
+            ptr=ptr->right;
+
+            //將del(被刪除的node)的兩邊重新接上
+            LEFT = del->left;
+            RIGHT = del->right;
+
+            LEFT->right = RIGHT;
+            RIGHT->left = LEFT;
+
+            //cerr<<"delete:"<<*(del->contain)<<endl;
+
+            delete del->contain;//delete ItemType object
+            del->contain=NULL;
+
+            delete del;//delete node contain
+            del=NULL;
+
+
+        }
     }
 
 
@@ -412,10 +420,11 @@ public:
             cout<<"Please initializes"<<endl;
             return;
         }
-
-        if(finger==first)
+        else if(finger==first)
         {
-            finger==NULL;
+            finger=NULL;
+            iterator_num=0;
+            return;
         }
 
         if((finger->right)!=NULL)
@@ -432,12 +441,8 @@ public:
 
     bool ended() const
     {
-        if(finger==NULL)
-        {
-            return true;
-        }
-
-        return false;
+        if(finger==NULL) return true;
+        else return false;
     }
     //如果手指沒有指向任何物品就回傳true，否則回傳false
 
@@ -445,9 +450,9 @@ public:
 
     const ItemType& currentValue() const
     {
-        if(finger==NULL)
+        if(finger==NULL||finger==first)
         {
-            cout<<"Please initializes"<<endl;
+            cerr<<"Please initializes"<<endl;
             return *empty_obj;//失敗時回傳填滿\0的Itemtype
         }
 
@@ -472,4 +477,58 @@ public:
     //回傳手指指到的是第幾個物品
     //若更動過背包中的物品(insert, erase, eraseAll)，必須先初始化才能使用呼叫currentCount()
     //若還未將手指初始化就呼叫currentCount，印Please initializes，回傳0，並且程式不能壞掉f
+
+    void trace()
+    {
+        int i=0;
+      struct node<ItemType>* ptr = first->left;
+
+        while(ptr!=first)
+        {
+            cout<<"\t"<<++i<<": "<<*(ptr->contain)<<endl;
+            ptr = ptr->left;
+        }
+    }
 };
+
+
+
+template<class ItemType>
+void combine(Bag<ItemType>& bag1, Bag<ItemType>& bag2, Bag<ItemType>& result)
+{
+    //bag1.trace();
+
+    result.deleteAll();
+
+    bag1.start();
+    bag2.start();
+
+    for(int i=0;i<bag1.size();i++)
+    {
+      result.insert(bag1.currentValue());
+      bag1.next();
+    }
+
+    for(int i=0;i<bag2.size();i++)
+    {
+      result.insert(bag2.currentValue());
+      bag2.next();
+    }
+
+    return;
+}
+
+template<class ItemType>
+void subtract(Bag<ItemType>& bag1, Bag<ItemType>& bag2, Bag<ItemType>& result)
+{
+    result = bag1;
+
+    bag2.start();
+
+    for(int i=0;i<bag2.size();i++)
+    {
+        result.erase(bag2.currentValue());
+        bag2.next();
+    }
+
+}
