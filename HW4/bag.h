@@ -91,7 +91,7 @@ public:
         deleteAll();
 
         delete first;
-        //delete empty_obj;
+        delete empty_obj;
 
         cout<<"Bag destructed\n";
     }
