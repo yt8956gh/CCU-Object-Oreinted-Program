@@ -24,7 +24,7 @@ using namespace std;
 
         init=mode=elementNum=0;
 
-        cerr<<"Constructor"<<endl;
+        //cerr<<"Constructor"<<endl;
     }
 
     Matrix::~Matrix()
@@ -39,7 +39,7 @@ using namespace std;
         }
 
         //element.shrink_to_fit();
-        cerr<<"Destructor"<<endl;
+        //cerr<<"Destructor"<<endl;
     }
 
     Matrix::Matrix(const Matrix& copy)
@@ -59,7 +59,7 @@ using namespace std;
 
         tmpMatrix = new Matrix;
 
-        cerr<<"Copy constructor"<<endl;
+        //cerr<<"Copy constructor"<<endl;
     }
 
 
@@ -152,11 +152,11 @@ using namespace std;
 
     double Matrix::operator() (const int row,const int column)const
     {
-        int index=0,i=0;
+        int index=0,i=0,tmp=0;
 
         if(row>rank||column>rank)
         {
-            cerr<<"#ERROR: Out of range in Matrix"<<endl<<endl;
+            cerr<<endl<<"#ERROR: Out of range in Matrix"<<endl;
             return 0;
         }
         else if(init==0)
@@ -167,14 +167,17 @@ using namespace std;
 
         if(mode==1)//upper
         {
-            if((row+column-1)<=rank)
+            if(column>=row)
             {
-                for(i=(row-1);i>0;i--)
+                tmp=rank;
+
+                for(i=1;i<row;i++)
                 {
-                    index+=(rank-i+1);
+                    index+=tmp;
+                    tmp--;
                 }
 
-                index+=column;
+                index+=(rank-column+1);
 
                 index-=1;//使index變成vector的格式
 
@@ -186,7 +189,7 @@ using namespace std;
         }
         else
         {
-          if((row+column)>rank)
+          if(column<=row)
           {
               for(i=0;i<row;i++)
               {
@@ -293,7 +296,7 @@ using namespace std;
                 {
                     index=number=0;
 
-                    if((row+column-1)<=rank)
+                    if(row<=column)
                     {
                         for(j=1;j<=rank;j++)//用來trace當前的row & column
                         {
@@ -329,7 +332,7 @@ using namespace std;
                 {
                     index=number=0;
 
-                    if((row+column)>rank)
+                    if(row>=column)
                     {
                         for(j=1;j<=rank;j++)//用來trace當前的row & column
                         {
@@ -337,6 +340,8 @@ using namespace std;
                         }
                     }
                     else continue;
+
+                    //cerr<<"row:"<<row<<"\tcolumn:"<<column<<" "<<number<<endl;//for test
 
                     //使index變成vector的格式
                     for(i=0;i<row;i++)
@@ -431,14 +436,15 @@ ostream& operator<<(ostream& out, const Matrix& x)
         for(i=0;i<rank;i++)
         {
 
-            for(k=0;k<(rank-i);k++)
-            {
-                out<<x.element.at(index++)<<'\t';
-            }
-
             for(j=0;j<i; j++)
             {
                 out<<"0\t";
+            }
+
+
+            for(k=0;k<(rank-i);k++)
+            {
+                out<<x.element.at(index++)<<'\t';
             }
 
             out<<endl;
