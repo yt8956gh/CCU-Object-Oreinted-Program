@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<ctype.h>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ private:
     int elementNum;
     vector<double> element;
     Matrix *tmpMatrix;
+    Matrix *emptyMatrix;
 
 
 public:
@@ -24,6 +26,9 @@ public:
         //make a empty Matrix for return before init
         elementNum = rank*(rank+1)/2;
 
+        tmpMatrix=NULL;
+
+
         for(int i=0;i<elementNum;i++)
         {
             element.push_back(0);
@@ -31,17 +36,20 @@ public:
 
         init=mode=elementNum=0;
 
-        //init_tmpMatrix(rank);
-
         cerr<<"Constructor"<<endl;
     }
 
     ~Matrix()
     {
 
-        element.clear();
-        tmpMatrix->element.clear();
-        delete tmpMatrix;
+        this->element.clear();
+
+        if(tmpMatrix!=NULL)
+        {
+            tmpMatrix->element.clear();
+            delete tmpMatrix;
+        }
+
         //element.shrink_to_fit();
         cerr<<"Destructor"<<endl;
     }
@@ -61,7 +69,7 @@ public:
 
         init=1;
 
-        //init_tmpMatrix(copy.rank);
+        tmpMatrix = new Matrix;
 
         cerr<<"Copy constructor"<<endl;
     }
@@ -106,7 +114,8 @@ public:
             element.push_back(tmp);
         }
 
-        tmpMatrix = new Matrix();
+        if(tmpMatrix == NULL)
+            tmpMatrix = new Matrix();
 
         init=1;
     }
@@ -129,28 +138,19 @@ public:
         elementNum = copy.elementNum;
         mode = copy.mode;
 
-        //delete tmpMatrix;
-        //init_tmpMatrix(rank);
-
         //將右邊寫入左邊
         for(int i=0;i<elementNum;i++)
         {
             element.push_back(copy.element.at(i));
         }
 
+
+        if(tmpMatrix == NULL) tmpMatrix = new Matrix();
+
         init=1;
 
         return *this;
     }
-
-    void init_tmpMatrix(int rank=2)
-    {
-        tmpMatrix = new Matrix(rank);
-
-        tmpMatrix->mode = 1;//deflaut
-        tmpMatrix->init = 1;
-    }
-
 
     void test() const
     {
@@ -159,6 +159,61 @@ public:
             cout<<element.at(i)<<" ";
         }
         cout<<endl;
+    }
+
+
+    double operator() (const int row,const int column)const
+    {
+        int index=0,i=0;
+
+        if(row>rank||column>rank)
+        {
+            cerr<<"# ERROR: Out of range in Matrix"<<endl<<endl;
+            return 0;
+        }
+        else if(init==0)
+        {
+            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            return 0;
+        }
+
+        if(mode==1)//upper
+        {
+            if((row+column-1)<=rank)
+            {
+                for(i=(row-1);i>0;i--)
+                {
+                    index+=(rank-i+1);
+                }
+
+                index+=column;
+
+                index-=1;//使index變成vector的格式
+
+                return element.at(index);
+            }
+
+            else return 0;
+
+        }
+        else
+        {
+          if((row+column)>rank)
+          {
+              for(i=0;i<row;i++)
+              {
+                  index+=i;
+              }
+
+              index+=column;
+
+              index-=1;//使index變成vector的格式
+
+              return element.at(index);
+          }
+          else return 0;
+        }
+
     }
 
 
@@ -179,14 +234,12 @@ public:
             cout<<"# Please use += to matrix in same mode(upper/lower)"<<endl<<endl;
             return *this;
         }
-        
 
 
         for(int i=0;i<elementNum;i++)
         {
             element.at(i)+=m.element.at(i);
         }
-
 
         return *this;
     }
@@ -221,6 +274,108 @@ public:
 
     Matrix& operator*=(const Matrix& m)
     {
+
+
+        if(init==0)
+        {
+            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            return *this;
+        }
+        else if(this->rank!=m.rank)
+        {
+            cout<<"# Please use *= to matrix in same rank"<<endl<<endl;
+            return *this;
+        }
+        else if(this->mode!=m.mode)
+        {
+            cout<<"# Please use *= to matrix in same mode(upper/lower)"<<endl<<endl;
+            return *this;
+        }
+
+        double *tmpArray = new double[elementNum];
+        int i=0,k=0,j=0,index=0,row=0,column=0;
+        double number=0;
+
+
+        if(mode==1)//upper
+        {
+            for(row=1;row<=rank;row++)//row
+            {
+                for(column=1;column<=rank;column++)//column
+                {
+                    index=number=0;
+
+                    if((row+column-1)<=rank)
+                    {
+                        for(j=1;j<=rank;j++)//用來trace當前的row & column
+                        {
+                            number += (*this)(row,j)*m(j,column);
+                        }
+                    }
+                    else continue;
+
+                    cerr<<"row:"<<row<<"\tcolumn:"<<column<<" "<<number<<endl;
+
+                    //使index變成vector的格式
+                    for(i=(row-1);i>0;i--)
+                    {
+                        index+=(rank-i+1);
+                    }
+                    index+=column;
+                    index-=1;
+
+                    if(index>elementNum)
+                    {
+                        cerr<<"OUT OF RANGE"<<endl;
+                    }
+                    else tmpArray[index]=number;
+                }
+            }
+
+        }
+        else
+        {
+            for(row=1;row<=rank;row++)//row
+            {
+                for(column=1;column<=rank;column++)//column
+                {
+                    index=number=0;
+
+                    if((row+column)>rank)
+                    {
+                        for(j=1;j<=rank;j++)//用來trace當前的row & column
+                        {
+                            number += (*this)(row,j)*m(j,column);
+                        }
+                    }
+                    else continue;
+
+                    //使index變成vector的格式
+                    for(i=0;i<row;i++)
+                    {
+                        index+=i;
+                    }
+
+                    index+=column;
+                    index-=1;
+
+                    if(index>elementNum)
+                    {
+                        cerr<<"OUT OF RANGE"<<endl;
+                    }
+                    else tmpArray[index]=number;
+                }
+            }
+        }
+
+        for(i=0;i<elementNum;i++)
+        {
+            element.at(i) = tmpArray[i];
+        }
+
+        delete [] tmpArray;
+
+        return *this;
 
     }
 
@@ -267,9 +422,6 @@ ostream& operator<<(ostream& out, const Matrix& x)
 {
 
     int index=0,i=0,k=0,j=0,rank=x.size();
-
-
-    //x.test();
 
     out<<endl;
 
