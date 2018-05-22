@@ -61,8 +61,6 @@ int main(){
 	M3 = M2 * 2 * M1;
 	cout << "Now M3 is: " << M3 << endl << endl;
 
-
-
 	cout << "double d = M1(1,2)" << endl;
 	double d = M1(1,2);
 	cout << "Now d is: " << d << endl << endl;
