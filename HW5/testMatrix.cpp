@@ -34,7 +34,7 @@ int main(){
 
 
 	M1+=M2;
-	/*
+	
 	cout << "M1 is: " << M1 << endl << endl;
 	cout << "M2 is: " << M2 << endl << endl;
 	
@@ -43,21 +43,24 @@ int main(){
 	// Therefore, please make sure that you check their types first before doing the calculation.
 
 	cout << "M3 = M1 + M2" <<endl;
-	M3 = M2 + M3;
+	M3 = M1 + M2;
 	cout << "Now M3 is: " << M3 << endl << endl;
 	
-	cout << "M3 = M2 * 5" <<endl;
-	M3 = M2 * 5;
-	cout << "Now M3 is: " << M3 << endl << endl;
+	//cout << "M3 = M2 * 5" <<endl;
+	//M3 = M2 * 5;
+	//cout << "Now M3 is: " << M3 << endl << endl;
 
 	cout << "M3 -= M1" << endl;
 	M3 -= M1;
 	cout << "Now M3 is: " << M3 << endl << endl;
 	
+	/*
 	cout << "M3 = M2 * 2 * M1" << endl;
 	M3 = M2 * 2 * M1;
 	cout << "Now M3 is: " << M3 << endl << endl;
 	
+
+
 	cout << "double d = M1(1,2)" << endl;
 	double d = M1(1,2);
 	cout << "Now d is: " << d << endl << endl;
