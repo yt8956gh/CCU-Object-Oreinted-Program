@@ -15,17 +15,6 @@ int main(){
 	Matrix M1, M2, M3;
 	cout << "* Assign values for matrix M1 *" << endl;
 	M1.readMatrix();
-	// ---This should be implemented in Matrix::readMatrix()---
-	// <prompt> specify number of rows:
-	// <user input> 3
-	// <prompt> is upper or lower triangular: (upper: 1, lower:0)
-	// <user input> 0
-	// <prompt> input elements of the matrix:
-	// <prompt> for example, if you want to create a lower-triangular matrix with following elements:
-	// <prompt> 4    0    0
-    // <prompt> 3    2.5  0
-	// <prompt> 1    2    2
-	// <prompt> please type: 4 3 2.5 1 2 2
 
 	cout << "* Assign values for matrix M2 *" << endl;
 	M2.readMatrix();
@@ -51,9 +40,9 @@ int main(){
 	M3 = M1 + M2;
 	cout << "Now M3 is: " << M3 << endl << endl;
 
-	//cout << "M3 = M2 * 5" <<endl;
-	//M3 = M2 * 5;
-	//cout << "Now M3 is: " << M3 << endl << endl;
+	cout << "M3 = M2 * 5" <<endl;
+	M3 = M2 * 5;
+	cout << "Now M3 is: " << M3 << endl << endl;
 
 	cout << "M3 -= M1" << endl;
 	M3 -= M1;
@@ -68,10 +57,6 @@ int main(){
 	cout << "Now M3 is: " << M3 << endl << endl;
 
 
-
-
-
-	/*
 	cout << "M3 = M2 * 2 * M1" << endl;
 	M3 = M2 * 2 * M1;
 	cout << "Now M3 is: " << M3 << endl << endl;
@@ -87,6 +72,6 @@ int main(){
 
 
 	cout << "---------- END PROGRAM ----------" << endl << endl;
-	*/
+
     return 0;
 }

@@ -168,12 +168,12 @@ public:
 
         if(row>rank||column>rank)
         {
-            cerr<<"# ERROR: Out of range in Matrix"<<endl<<endl;
+            cerr<<"#ERROR: Out of range in Matrix"<<endl<<endl;
             return 0;
         }
         else if(init==0)
         {
-            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            cerr<<"#ERROR: Please initialize Matrix with readMatrix."<<endl;
             return 0;
         }
 
@@ -221,7 +221,7 @@ public:
     {
         if(init==0)
         {
-            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            cerr<<"Please initialize Matrix with readMatrix."<<endl;
             return *this;
         }
         else if(this->rank!=m.rank)
@@ -249,17 +249,17 @@ public:
 
         if(init==0)
         {
-            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            cerr<<"#ERROR: Please initialize Matrix with readMatrix."<<endl;
             return *this;
         }
         else if(this->rank!=m.rank)
         {
-            cout<<"# Please use -= to matrix in same rank"<<endl<<endl;
+            cout<<"#ERROR:  Please use -= to matrix in same rank"<<endl<<endl;
             return *this;
         }
         else if(this->mode!=m.mode)
         {
-            cout<<"# Please use -= to matrix in same mode(upper/lower)"<<endl<<endl;
+            cout<<"#ERROR:  Please use -= to matrix in same mode(upper/lower)"<<endl<<endl;
             return *this;
         }
 
@@ -278,17 +278,17 @@ public:
 
         if(init==0)
         {
-            cerr<<"Please initialize Matrix with readMatrix()."<<endl;
+            cerr<<"#ERROR: Please initialize Matrix with readMatrix."<<endl;
             return *this;
         }
         else if(this->rank!=m.rank)
         {
-            cout<<"# Please use *= to matrix in same rank"<<endl<<endl;
+            cout<<"#ERROR: Please use *= to matrix in same rank"<<endl<<endl;
             return *this;
         }
         else if(this->mode!=m.mode)
         {
-            cout<<"# Please use *= to matrix in same mode(upper/lower)"<<endl<<endl;
+            cout<<"#ERROR: Please use *= to matrix in same mode(upper/lower)"<<endl<<endl;
             return *this;
         }
 
@@ -314,7 +314,7 @@ public:
                     }
                     else continue;
 
-                    cerr<<"row:"<<row<<"\tcolumn:"<<column<<" "<<number<<endl;
+                    //cerr<<"row:"<<row<<"\tcolumn:"<<column<<" "<<number<<endl;//for test
 
                     //使index變成vector的格式
                     for(i=(row-1);i>0;i--)
@@ -361,7 +361,7 @@ public:
 
                     if(index>elementNum)
                     {
-                        cerr<<"OUT OF RANGE"<<endl;
+                        cerr<<"ERROR: OUT OF RANGE"<<endl;
                     }
                     else tmpArray[index]=number;
                 }
@@ -399,23 +399,42 @@ public:
     Matrix operator+(const Matrix& rt)
     {
         *tmpMatrix = rt;
-        *tmpMatrix+=*this;
+        *tmpMatrix+= (*this);
         return *tmpMatrix;
     }
 
     Matrix operator-(const Matrix& rt)
     {
         *tmpMatrix = rt;
-        *tmpMatrix-=*this;
+        *tmpMatrix-= (*this);
         return *tmpMatrix;
     }
 
-    Matrix operator*(const Matrix& rt){};
+    Matrix operator*(const Matrix& rt)
+    {
+        *tmpMatrix = rt;
+        *tmpMatrix*= (*this);
+        return *tmpMatrix;
+    }
 
 
     friend ostream& operator<<(ostream& out, const Matrix& x);
+
+    friend Matrix operator*(double s, const Matrix& rt);
 };
 
+
+Matrix operator*(double s, const Matrix& rt)
+{
+    Matrix tmp = rt;
+
+    for(int i=0;i<tmp.elementNum;i++)
+    {
+        tmp.element.at(i) = rt.element.at(i)*s;
+    }
+
+    return tmp;
+}
 
 
 ostream& operator<<(ostream& out, const Matrix& x)
