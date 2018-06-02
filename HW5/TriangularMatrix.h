@@ -25,56 +25,23 @@ private:
 public:
 
     Matrix(int rank=2);
-
-
     ~Matrix();
-    
     Matrix(const Matrix&);
-
-
     void readMatrix();
-    
 
     int size() const;
-
-
-    int mode_check() const;
-
-
-    Matrix& operator=(const Matrix &);
-
-
+    int mode_check() const;    
     void test() const;
 
-
-
     double operator() (const int,const int)const;
-
-
-
+    Matrix& operator=(const Matrix &);
     Matrix& operator+=(const Matrix&);
-
-
     Matrix& operator-=(const Matrix&);
-
-
     Matrix& operator*=(const Matrix&);
-
-
-
     Matrix& operator*(const double);
-
-
-
     Matrix operator+(const Matrix&);
-
-
     Matrix operator-(const Matrix&);
-
-
     Matrix operator*(const Matrix&);
-
-
 
     friend ostream& operator<<(ostream& out, const Matrix& x);
 
