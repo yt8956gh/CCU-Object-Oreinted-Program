@@ -12,6 +12,7 @@ HuffmanTree::HuffmanTree(const string& input)
     int i=0,index=0;
     int table[200];//紀錄單字的出現次數
     int charNum=0;
+    codeMaxLength = 0;
 
     memset(code_tmp,'\0',sizeof(code_tmp));
 
@@ -97,14 +98,15 @@ HuffmanTree::HuffmanTree(const string& input)
         cout<<(*code_ptr)->symbol<<":"<<(*code_ptr)->code<<endl;
     }
 
+    codeMaxLength++;
+    cout<<"DEEP:"<<codeMaxLength<<endl;
+
 }
 
 void HuffmanTree::trace(Node* parent, int level, char tmp)
 {
     //cerr<<"Level:"<<level<<endl;
     //cerr<<"tmp:"<<tmp<<endl;
-
-
     if(parent!=NULL)
     {
         //cerr<<parent->getFreq()<<endl;
@@ -131,6 +133,8 @@ void HuffmanTree::trace(Node* parent, int level, char tmp)
 
             code_table.push_back(ptr);
         }
+
+        if(level>=codeMaxLength) codeMaxLength = level;
     }
 }
 
@@ -138,7 +142,7 @@ void HuffmanTree::trace(Node* parent, int level, char tmp)
 
 bool HuffmanTree::cmp(Node* a, Node* b)
 {
-    return a->getFreq() < b->getFreq();
+    return a->getFreq() <= b->getFreq();
 }
 
 HuffmanTree::~HuffmanTree()
@@ -179,6 +183,38 @@ string HuffmanTree::encode(const string& s) const
 string HuffmanTree::decode(const string& s) const
 {
 
+    int i=0,legal=0,len = s.size(),index=0;
+    vector<CODE*>::const_iterator  ptr;
+    string pattern;
+    char tmp[100];
 
-    return string("");
+    while(index<len)
+    {
+        legal=0;
+
+        for(i=1;i<=codeMaxLength;i++)//長詞優先
+        {
+            for(ptr=code_table.begin();ptr!=code_table.end();ptr++)//在code_table尋找對應編碼
+            {
+                if((index+i)>len) break;
+
+
+                if(!s.substr(index,i).compare((*ptr)->code))
+                {
+                    legal=1;
+                    pattern.append(1,(*ptr)->symbol);
+                    index+=i;
+                    break;
+                }
+            }
+        }
+
+        if(legal==0)//找不到的話
+        {
+            cerr<<"ERROR: sequence "<<s<<" in "<<index<<" cannot be decoded"<<endl;
+            return string("");
+        }
+    }
+
+    return pattern;
 }

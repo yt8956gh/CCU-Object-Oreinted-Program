@@ -21,6 +21,7 @@ private:
     vector<CODE*> code_table;
     Node *root;
     char code_tmp[100];
+    int codeMaxLength;
 
 public:
     HuffmanTree(const string&);
