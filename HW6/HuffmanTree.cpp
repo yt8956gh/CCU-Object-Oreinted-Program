@@ -9,11 +9,10 @@ using namespace std;
 
 HuffmanTree::HuffmanTree(const string& input)
 {
-    int i=0,index=0;
-    int table[200];//紀錄單字的出現次數
-    int charNum=0;
-    codeMaxLength = 0;
+    int i=0, index=0, table[200];//用table[(int)char]的方式，紀錄字元的出現次數
 
+    // Initialization
+    codeMaxLength = 0;
     memset(code_tmp,'\0',sizeof(code_tmp));
 
     for(i=0;i<200;i++)
@@ -21,21 +20,22 @@ HuffmanTree::HuffmanTree(const string& input)
         table[i]=0;
     }
 
-    for(i=0;i<input.size();i++)//紀錄出現次數
+    // 如果不cast成int，會產生以下錯誤
+    // comparison between signed and unsigned integer expressions
+    for(i=0;i<(int)input.size();i++)//紀錄出現次數
     {
         index = input.at(i);
-        if(index>=32 && index<=126)
+
+        if(index>=32 && index<=126)//spec規定只接收ASCII 32~126
         {
             table[index]++;
-            charNum++;
         }
         else cerr<<"ERROR: Illegal Input to HuffmanTree"<<endl;
     }
 
-    vector<Node*> NodeTable,allTable;
+    vector<Node*> NodeTable;//暫時存放node指標
     vector<Node*>::iterator ptr;
-    Node *Lptr,*Rptr, *NodePtr;
-    int Counter=0;
+    Node *Lptr,*Rptr,*NodePtr;
 
     for(i=0;i<200;i++)//依照各字元的出現次數，建構TerminalNode
     {
@@ -45,21 +45,19 @@ HuffmanTree::HuffmanTree(const string& input)
         }
     }
 
-    sort(NodeTable.begin(),NodeTable.end(),cmp);
+    sort(NodeTable.begin(),NodeTable.end(),cmp);  //NodeTable為小到大
 
-    allTable = NodeTable;//複製一份等到Destructed時刪除用
+    allTable = NodeTable;//複製所有指標到allTable，等到Destructed時刪除用
 
-    i=0;
 
-    //Build HuffmanTree
-    //1.挑選兩個最小的TerminalNode丟到internalNode底下
-    //2.建樹時，freq較大的放左邊
-    //3.NodeTable為升序排列
+    // Build Huffman Tree
+    // 1. 新建一個InternalNode，再挑選兩個最小的TerminalNode，設為InternalNode的左右子樹(freq較大的放左邊)。
+    // 2. 將上述NodeTable中最小的兩個TerminalNode刪除。
+    // 3. 將建好的internalNode丟進NodeTable （當作升序的stack）。
+    // 4. 重複上述行為直到NodeTable只剩一個元素，也就是root。
+
     while(NodeTable.size()>=2)
     {
-        //cout<<"Round: "<<i++<<"----------"<<endl;
-        //cerr<<"NodeTable.size():"<<NodeTable.size()<<endl;
-
         Lptr = NodeTable.at(0);
         Rptr = NodeTable.at(1);
 
@@ -73,24 +71,15 @@ HuffmanTree::HuffmanTree(const string& input)
 
         sort(NodeTable.begin(),NodeTable.end(),cmp);
 
-        /*
-        for(ptr = NodeTable.begin(); ptr!=NodeTable.end();ptr++)
-        {
-            //iterator視同指標，需要*來取值
-            cout<<(*ptr)->getValue()<<":"<<(*ptr)->getFreq()<<endl;
-        }
-        cout<<endl;
-        */
     }
 
     root = *(NodeTable.begin());
 
-    //cerr<<"Root:"<<root->getFreq()<<endl;
-
-    trace(root,-1,0);
+    trace(root,-1,0);//因為第一個點是整顆樹的root，所以傳-1來告知trace
 
     vector<CODE*>::iterator code_ptr;
 
+    //印出編碼表
     cout<<"----------CODE TABLE---------"<<endl;
 
     for(code_ptr = code_table.begin();code_ptr!=code_table.end();code_ptr++)
@@ -98,37 +87,37 @@ HuffmanTree::HuffmanTree(const string& input)
         cout<<(*code_ptr)->symbol<<":"<<(*code_ptr)->code<<endl;
     }
 
-    codeMaxLength++;
-    cout<<"DEEP:"<<codeMaxLength<<endl;
+    cout<<"-----------------------------"<<endl<<endl;
 
+    codeMaxLength++;//因為level原本是拿來紀錄index的，所以要+1才會變成length
 }
 
 void HuffmanTree::trace(Node* parent, int level, char tmp)
 {
-    //cerr<<"Level:"<<level<<endl;
-    //cerr<<"tmp:"<<tmp<<endl;
     if(parent!=NULL)
     {
-        //cerr<<parent->getFreq()<<endl;
-
-        if(level>=0)
+        if(level>=0)//避免在rot==parent時，把數字加入code_tmp
         {
             code_tmp[level] = tmp;
             code_tmp[level+1] = '\0';
         }
 
-        CODE* ptr;
+        CODE* ptr=NULL;
 
-        if(parent->getNodeType())//InternalNode:1
+        //依據Node的類型決定行為
+        //InternalNode:1
+        //TerminalNodes:0
+        if(parent->getNodeType())
         {
             trace(parent->getLChild(),level+1,'0');
             trace(parent->getRChild(),level+1,'1');
         }
-        else//TerminalNodes:0
+        else//trace到TerminalNode，就紀錄該字元的編碼
         {
-            //cerr<<code_tmp<<endl;
-            ptr =  new CODE;
+            ptr =  new CODE;//用來紀錄每一個字元的code
             ptr->symbol = parent->getValue();
+
+            memset(ptr->code,'\0',sizeof(ptr->code));//Initialization
             strcpy(ptr->code, code_tmp);
 
             code_table.push_back(ptr);
@@ -138,16 +127,32 @@ void HuffmanTree::trace(Node* parent, int level, char tmp)
     }
 }
 
+HuffmanTree::~HuffmanTree()
+{
+    vector<CODE*>::iterator code_ptr;
 
+    for(code_ptr = code_table.begin();code_ptr!=code_table.end();code_ptr++)
+    {
+        delete *code_ptr;
+    }
+
+    vector<Node*>::iterator ptr;
+
+    for(ptr = allTable.begin();ptr!=allTable.end();ptr++)
+    {
+        //刪除時必須用子類別的指標，要不然會刪不乾淨。
+        if((*ptr)->getNodeType()) delete (InternalNode*) *ptr;
+        else delete (TerminalNode*) *ptr;
+    }
+
+    //delete root;
+    code_table.clear();
+    allTable.clear();
+}
 
 bool HuffmanTree::cmp(Node* a, Node* b)
 {
-    return a->getFreq() <= b->getFreq();
-}
-
-HuffmanTree::~HuffmanTree()
-{
-
+    return a->getFreq() < b->getFreq();
 }
 
 string HuffmanTree::encode(const string& s) const
@@ -156,7 +161,7 @@ string HuffmanTree::encode(const string& s) const
     vector<CODE*>::const_iterator  ptr;
     string pattern;
 
-    for(i=0;i<s.size();i++)
+    for(i=0;i<(int)s.size();i++)
     {
         legal=0;
 
@@ -186,7 +191,6 @@ string HuffmanTree::decode(const string& s) const
     int i=0,legal=0,len = s.size(),index=0;
     vector<CODE*>::const_iterator  ptr;
     string pattern;
-    char tmp[100];
 
     while(index<len)
     {
@@ -196,8 +200,7 @@ string HuffmanTree::decode(const string& s) const
         {
             for(ptr=code_table.begin();ptr!=code_table.end();ptr++)//在code_table尋找對應編碼
             {
-                if((index+i)>len) break;
-
+                if((index+i)>len) break;//如果index超出range
 
                 if(!s.substr(index,i).compare((*ptr)->code))
                 {

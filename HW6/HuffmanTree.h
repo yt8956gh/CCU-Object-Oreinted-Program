@@ -18,7 +18,8 @@ typedef struct code_table
 class HuffmanTree
 {
 private:
-    vector<CODE*> code_table;
+    vector<CODE*> code_table;//用來紀錄每一個字元的code
+    vector<Node*> allTable;
     Node *root;
     char code_tmp[100];
     int codeMaxLength;

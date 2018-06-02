@@ -22,10 +22,8 @@ int InternalNode::getNodeType()
 
 char InternalNode::getValue()
 {
-    //cerr<<"ERROR: Internal Node have no Value."<<endl;
+    cerr<<"ERROR: Internal Node have no Value."<<endl;
     //cerr<<"Internal Node";
-
-    
     return 0;
 }
 Node* InternalNode::getLChild()

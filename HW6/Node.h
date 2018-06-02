@@ -5,7 +5,7 @@
 class Node
 {
 private:
-    int freq;
+    int freq;  // 儲存 terminal node 的字頻，或 internal node 所有子節點的字頻總和
 
 public:
     Node(const int);

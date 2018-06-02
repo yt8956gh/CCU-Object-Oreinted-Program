@@ -33,6 +33,6 @@ Node* TerminalNode::getLChild()
 
 Node* TerminalNode::getRChild()
 {
-    cerr<<"# Encounter Termianl Node:"<<getValue()<<endl;  
+    cerr<<"# Encounter Termianl Node:"<<getValue()<<endl;
     return NULL;
 }
