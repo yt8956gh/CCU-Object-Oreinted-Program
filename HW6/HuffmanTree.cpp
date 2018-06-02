@@ -214,7 +214,7 @@ string HuffmanTree::decode(const string& s) const
 
         if(legal==0)//找不到的話
         {
-            cerr<<"ERROR: sequence "<<s<<" in "<<index<<" cannot be decoded"<<endl;
+            cerr<<"ERROR: sequence "<<s<<" cannot be decoded in idnex:"<<index<<endl;
             return string("");
         }
     }

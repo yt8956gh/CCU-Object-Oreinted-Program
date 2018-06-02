@@ -33,6 +33,8 @@ int main(){
 	// Therefore, please print out error message and return an empty string("") when encounter this.
 	cout << t.decode("1010111100001111001011111110101111") << endl;
 
+
+
 	HuffmanTree t2("winnie-the-poohis a silly old bear");
 
 	cout << t2.encode("winnie-the-pooh is a silly old bear") << endl;
@@ -42,6 +44,12 @@ int main(){
 	cout << t2.encode("silly old bear is winnie-the-pooh") << endl;
 
 	cout << t2.decode("01100011110111010100010110111101011101010110111110011100101000101100101010100101110111001111101011000100011110100000110111011000") << endl;
+
+
+	HuffmanTree t3("This summer's World Cup in Russia could well be the last one staged by just one country for some time, as financial and political considerations play an ever-increasing role in choosing hosts.");
+
+	cout<<t3.encode("World Cup in Russia")<<endl;
+	cout<<t3.decode("001001111000001010100111111000010101110011111111100110111110000110011101101110110010110")<<endl;
 
 
 	return 0;
