@@ -58,8 +58,8 @@ HuffmanTree::HuffmanTree(const string& input)
 
     while(NodeTable.size()>=2)
     {
-        Lptr = NodeTable.at(0);
-        Rptr = NodeTable.at(1);
+        Rptr = NodeTable.at(0);
+        Lptr = NodeTable.at(1);
 
         NodeTable.erase(NodeTable.begin());
         NodeTable.erase(NodeTable.begin());
@@ -214,7 +214,7 @@ string HuffmanTree::decode(const string& s) const
 
         if(legal==0)//找不到的話
         {
-            cerr<<"ERROR: sequence "<<s<<" cannot be decoded in idnex:"<<index<<endl;
+            cerr<<"ERROR: sequence "<<s<<" cannot be decoded in index:"<<index<<endl;
             return string("");
         }
     }
